@@ -72,6 +72,12 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
     }
   }
 
+  function updateFeedAndPebble(feedId, newValue){
+    _feedList[feedId].lastChecked = new Date();
+    _feedList[feedId].value = newValue ;
+    updatePebble(_feedList[feedId]);
+  }
+
   function updatePebble(feed){
     console.log("sending "+feed.value+" for "+feed.feedId);
     Pebble.sendAppMessage({
@@ -88,7 +94,7 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
       units: "\u00B0C",
       lastChecked: new Date()
     }
-    getFeedValue(feeds[i], updatePebbleIfChanged)
+    getFeedValue(feeds[i], updateFeedAndPebble)
   };
 
   // /**
@@ -104,8 +110,7 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
   return {
     setFeedIndex: function(newIndex){
       feedIndex = newIndex;
-      updatePebble(_feedList[feedList[feedIndex]]);
-    },
+      getFeedValue(feeds[feedIndex], updateFeedAndPebble);    },
     currentValues: function(){
       return _feedList;
     },
