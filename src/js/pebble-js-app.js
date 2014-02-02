@@ -12,18 +12,15 @@ Pebble.addEventListener("ready", function(){
 
 Pebble.addEventListener("appmessage",
   function(e) {
-    console.log("Received message:");
-    console.log(" state: " + e.payload.state);
-    console.log(" index: " + e.payload.feedIndex);
     if(e.payload.feedIndex != undefined && e.payload.feedIndex != null){
       feedIndex = e.payload.feedIndex;
-      console.log("updating pebble: "+e.payload.feedIndex);
       if(emon){
-        console.log("...telling emon")
         emon.setFeedIndex(e.payload.feedIndex);
       }else{
         console.log("App not ready yet.");
       }
+    }else if(e.payload.state){
+      console.log("Set heating state to "+e.payload.state);
     }
   }
 );
@@ -53,7 +50,6 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
           if (req.status == 200) {
             feedValue = req.responseText;
             feedValue = feedValue.substring(1, feedValue.length - 1);
-            console.log(":" + feedValue)
             onComplete(feedId, feedValue);
           } else {
             console.log("Something bad happened getting the updated value. Maybe no internet connection...");
@@ -72,9 +68,7 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
     _feedList[feedId].value = newValue ;
 
     if(feedId == feedList[feedIndex] && isUpdated){
-      console.log("feed "+feedId+" changed to "+newValue);
       updatePebble(_feedList[feedId]);
-      console.log("updated");
     }
   }
 
@@ -97,15 +91,15 @@ var emonFactory = function(emonServer, feeds, apiKey, refreshRateSecs){
     getFeedValue(feeds[i], updatePebbleIfChanged)
   };
 
-  /**
-   * Update the feed values every minute
-  **/
-  setInterval(function() {
+  // /**
+  //  * Update the feed values every minute
+  // **/
+  // setInterval(function() {
 
-    for(var feedId in _feedList){
-      getFeedValue(feedId, updatePebbleIfChanged);
-    }
-  }, refreshRateSecs *1000);// Multiple seconds up to millis
+  //   for(var feedId in _feedList){
+  //     getFeedValue(feedId, updatePebbleIfChanged);
+  //   }
+  // }, refreshRateSecs *1000);// Multiple seconds up to millis
 
   return {
     setFeedIndex: function(newIndex){
