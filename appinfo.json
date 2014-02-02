@@ -1,0 +1,23 @@
+{
+  "uuid": "c6dbb100-1ae1-4468-89fc-92bd680bdbf6",
+  "shortName": "pebble-emoncms",
+  "longName": "pebble-emoncms",
+  "companyName": "Ryan Brooks",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "temperature": 0,
+    "state": 1,
+    "feedIndex": 2,
+    "feedCount": 3
+  },
+  "resources": {
+    "media": []
+  },
+  "capabilities": [ 
+    "configurable" 
+  ]
+}
